@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:db="http://www.mulesoft.org/schema/mule/db" xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+	xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd
+http://www.mulesoft.org/schema/mule/db http://www.mulesoft.org/schema/mule/db/current/mule-db.xsd">
+	<http:listener-config name="HTTP_Listener_config" doc:name="HTTP Listener config" doc:id="57dfe8a2-d7f0-4eda-9e61-a8b0e8b651ef" basePath="emp" responseStreamingMode="AUTO" primaryNodeOnly="false" path="insert" config-ref="HTTP_Listener_config" allowedMethods="POST">
+		<http:listener-connection host="0.0.0.0" port="8081" />
+	</http:listener-config>
+	<db:config name="Database_Config" doc:name="Database Config" doc:id="3fa97541-a5cf-496c-91d4-b34126292b36" >
+		<db:my-sql-connection host="localhost" port="3306" user="root" password="netweb12" database="mysql"/>
+	</db:config>
+	<flow name="demo-empFlow" doc:id="5844a245-50a7-40ae-a274-be35ec1b0e45" >
+		<http:listener doc:name="Listener" doc:id="57dfe8a2-d7f0-4eda-9e61-a8b0e8b651ef" config-ref="HTTP_Listener_config" path="insert" allowedMethods="POST"/>
+		<logger level="INFO" doc:name="Logger" doc:id="dccc5139-a048-4705-9873-1e1f3cb47faf" message="flow started"/>
+		<db:insert doc:name="Insert" doc:id="cabd7c32-0d13-425d-8f5f-b0de8ba862cc" config-ref="Database_Config">
+			<db:sql ><![CDATA[insert into users(FirstName,LastName,Phone,Email) value(:FirstName,:LastName,:Phone,:Email)]]></db:sql>
+			<db:input-parameters ><![CDATA[#[payload]]]></db:input-parameters>
+		</db:insert>
+		<logger level="INFO" doc:name="Logger" doc:id="ea82f9bb-2be8-4ec1-b4e0-cc32c5593b56" message="values inserted"/>
+		<ee:transform doc:name="Transform Message" doc:id="7f7faac8-7736-40d7-b181-735885f6a56d" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+	responce: 200,
+	message: "sucess"
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+	</flow>
+</mule>

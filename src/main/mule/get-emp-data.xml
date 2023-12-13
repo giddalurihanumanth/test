@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:db="http://www.mulesoft.org/schema/mule/db" xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/db http://www.mulesoft.org/schema/mule/db/current/mule-db.xsd">
+	<flow name="get-emp_dataFlow" doc:id="cd8c1a91-a35a-4110-96d5-8ae5a728e661" >
+		<http:listener doc:name="Listener" doc:id="1296b150-3133-426d-b0cb-ce1925cf9668" config-ref="HTTP_Listener_config" allowedMethods="GET" path="insert"/>
+		<logger level="INFO" doc:name="Logger" doc:id="ed047ee3-698e-4299-9db1-346d911f0cd1" message="#[attributes.queryParams.FirstName]"/>
+	</flow>
+</mule>
